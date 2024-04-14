@@ -14,8 +14,25 @@ class Trader:
             prices_0 = ''
             for _ in range(n-1):
                   prices_0 += '0,'
+            ship_cost = ''
+            for _ in range(n-1):
+                  ship_cost += '0,'
+            import_t = ''
+            for _ in range(n-1):
+                  import_t += '0,'
+            export_t = ''
+            for _ in range(n-1):
+                  export_t += '0,'
+            sunlight = ''
+            for _ in range(n-1):
+                  sunlight += '0,'            
+            humidity = ''
+            for _ in range(n-1):
+                  humidity += '0,'
+            
 
-            state.traderData = f'AMETHYSTS:{prices_0}10000:0.STARFRUIT:{prices_0}5000:0.'
+
+            state.traderData = f'ORCHIDS:{prices_0}1035:0:{ship_cost}:{import_t}:{export_t}:{sunlight}:{humidity}' #AMETHYSTS:{prices_0}10000:0.STARFRUIT:{prices_0}5000:0.'
 
             print("traderData: " + state.traderData)
             print("Observations: " + str(state.observations))
@@ -57,6 +74,30 @@ class Trader:
                         new_Prices = Prices[1:]
 
                         return Prices, new_Prices, inventory
+                  
+            def get_traderData_Orchids(state, product):
+                  parts = state.traderData.split('.')
+                  for i, part in enumerate(parts):
+                        Prod = part.split(':')[0]
+                        if Prod == product:
+                              index_of_product = i
+
+                  if index_of_product != None:
+                        trader_data_product = parts[index_of_product]
+                        splited_trader_data_product = trader_data_product.split(':')
+                        inventory = float(splited_trader_data_product[2])
+                        Prices = np.array(splited_trader_data_product[1].split(',')).astype(float)
+                        shipping_costs = np.array(splited_trader_data_product[3].split(',')).astype(float)
+                        import_tariff = np.array(splited_trader_data_product[4].split(',')).astype(float)
+                        export_tariff = np.array(splited_trader_data_product[5].split(',')).astype(float)
+                        sunlight = np.array(splited_trader_data_product[6].split(',')).astype(float)
+                        humidity = np.array(splited_trader_data_product[8].split(',')).astype(float)
+
+                        
+                        new_Prices = Prices[1:]
+
+                        return Prices, new_Prices, inventory
+                  
 
             trader_data = ""
 
@@ -87,7 +128,9 @@ class Trader:
                         trader_data += trader_data_product
 
                   else:
-                        if product == 'AMETHYSTS':
+                        if product == 'ORCHIDS':
+                        
+                        elif product == 'AMETHYSTS':
                               Prices, new_Prices, inventory = get_traderData(state, product)
                               prices_str = ''
                               for price in new_Prices:
@@ -150,6 +193,7 @@ class Trader:
                                           print("SELL", str(best_bid_amount) + "x", best_bid)
                                           orders.append(Order(product, best_bid, -best_bid_amount))
                   
+
                   # String value holding Trader state data required. 
                               # It will be delivered as TradingState.traderData on next execution.
             traderData = trader_data 
