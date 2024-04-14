@@ -29,14 +29,11 @@ class Trader:
             humidity = ''
             for _ in range(n-1):
                   humidity += '0,'
-            
-
 
             state.traderData = f'ORCHIDS:{prices_0}1035:0:{ship_cost}:{import_t}:{export_t}:{sunlight}:{humidity}' #AMETHYSTS:{prices_0}10000:0.STARFRUIT:{prices_0}5000:0.'
 
             print("traderData: " + state.traderData)
             print("Observations: " + str(state.observations))
-
 
 
             def calculate_midprice(product, buy_orders, sell_orders, price_basic=10000):
@@ -92,43 +89,128 @@ class Trader:
                         export_tariff = np.array(splited_trader_data_product[5].split(',')).astype(float)
                         sunlight = np.array(splited_trader_data_product[6].split(',')).astype(float)
                         humidity = np.array(splited_trader_data_product[8].split(',')).astype(float)
-
-                        
-                        new_Prices = Prices[1:]
-
-                        return Prices, new_Prices, inventory
                   
+                        return Prices, inventory, shipping_costs, import_tariff, export_tariff, sunlight, humidity
+                  
+            def write_trader_data(state, product):      
+                  midprice = calculate_midprice(product, buy_orders=state.order_depths[product].buy_orders, sell_orders=state.order_depths[product].sell_orders)
+                  Prices, inventory, shipping_costs, import_tariff, export_tariff, sunlight, humidity = get_traderData_Orchids(state, product)
+                                    
+                  new_shipping_cost = state.transportFees
+                  new_export, new_import = state.exportTariff, state.importTariff
+                  new_sunL, new_humid = state.sunlight, state.humidity
+
+                  prices_str = ''
+                  for price in Prices[-1:]:
+                        prices_str += f'{price},'
+
+                  ship_cost_str = ""
+                  for ship in shipping_costs[-1:]:
+                        ship_cost_str += f'{ship},'
+                  ship_cost_str += f'{new_shipping_cost}'
+
+                  import_t_str = ""
+                  for imp in import_tariff[-1:]:
+                        import_t_str += f'{imp},'
+                  import_t_str += f'{new_export}'
+
+                  export_t_str = ""
+                  for exp in export_tariff[-1:]:
+                        export_t_str += f'{exp},'
+                  export_t_str += f'{new_import}'
+
+                  sunlight_str = ""
+                  for sun in sunlight[-1:]:
+                        sunlight_str += f'{sun},'
+                  sunlight_str += f'{new_sunL}'
+
+                  humidity_str = ""
+                  for hum in humidity[-1:]:
+                        humidity_str += f'{hum},'
+                  humidity_str += f'{new_humid}'
+
+                  trader_data_product = f'{product}:{prices_str},{midprice}:{inventory}:{ship_cost_str}:{import_t_str}:{export_t_str}:{sunlight_str}:{humidity_str}'
+
+                  return trader_data_product
 
             trader_data = ""
 
             result = {}
             for product in state.order_depths:
-                  if state.timestamp < n*scale:
-                        order_depth: OrderDepth = state.order_depths[product]
-                        orders: List[Order] = []
+                  if product == 'ORCHIDS':
+                        if state.timestamp < n*scale:
+                              order_depth: OrderDepth = state.order_depths[product]
+                              orders: List[Order] = []
 
-                        midprice = calculate_midprice(product, buy_orders=state.order_depths[product].buy_orders, 
-                                                      sell_orders=state.order_depths[product].sell_orders)
-                        
-                        if state.timestamp == 0:
-                              prices_str = ""
-                              for _ in range(n-1):
-                                    prices_str += f'{0},'
-                              prices_str += f'{midprice}'
-                              inventory = 0
+                              midprice = calculate_midprice(product, buy_orders=state.order_depths[product].buy_orders, 
+                                                            sell_orders=state.order_depths[product].sell_orders)
+                              
+                              new_shipping_cost = state.transportFees
+                              new_export = state.exportTariff
+                              new_import = state.importTariff
+                              new_sunL = state.sunlight
+                              new_humid = state.humidity
 
-                              trader_data_product = f'{product}:{prices_str}:{inventory}.'
-                        else:
-                              Prices, new_Prices, inventory = get_traderData(state, product)
-                              prices_str = ''
-                              for price in new_Prices:
-                                    prices_str += f'{price}'
-                              trader_data_product = f'{product}:{prices_str}:{inventory}.'
-                        
-                        trader_data += trader_data_product
+                              if state.timestamp == 0:
+                                    prices_str = ""
+                                    for _ in range(n-1):
+                                          prices_str += f'{0},'
+                                    prices_str += f'{midprice}'
+                                    inventory = 0
+
+                                    ship_cost_str = ""
+                                    for _ in range(n-1):
+                                          ship_cost_str += f'{0},'
+                                    ship_cost_str += f'{new_shipping_cost}'
+
+                                    import_t_str = ""
+                                    for _ in range(n-1):
+                                          import_t_str += f'{0},'
+                                    import_t_str += f'{new_export}'
+
+                                    export_t_str = ""
+                                    for _ in range(n-1):
+                                          export_t_str += f'{0},'
+                                    export_t_str += f'{new_import}'
+
+                                    sunlight_str = ""
+                                    for _ in range(n-1):
+                                          sunlight_str += f'{0},'
+                                    sunlight_str += f'{new_sunL}'
+
+                                    humidity_str = ""
+                                    for _ in range(n-1):
+                                          humidity_str += f'{0},'
+                                    humidity_str += f'{new_humid}'
+
+
+                                    trader_data_product = f'{product}:{prices_str}:{inventory}:{ship_cost_str}:{import_t_str}:{export_t_str}:{sunlight_str}:{humidity_str}'
+                              else:
+                                    #Prices, new_Prices, inventory = get_traderData(state, product)
+                                    Prices, inventory, shipping_costs, import_tariff, export_tariff, sunlight, humidity = get_traderData_Orchids(state, product)
+                                    trader_data_product = write_trader_data(state, product)               
+                                    trader_data += trader_data_product
 
                   else:
                         if product == 'ORCHIDS':
+                              acceptable_price = 1100
+                              print("Acceptable price : " + str(acceptable_price))
+                              print("Buy Order depth : " + str(len(order_depth.buy_orders)) + ", Sell order depth : " + str(len(order_depth.sell_orders)))
+
+
+                              if len(order_depth.sell_orders) != 0:
+                                    best_ask, best_ask_amount = list(order_depth.sell_orders.items())[0]
+                                    if int(best_ask) < acceptable_price :
+                                          print("BUY", str(-best_ask_amount) + "x", best_ask)
+                                          orders.append(Order(product, best_ask, -best_ask_amount))
+                  
+                              if len(order_depth.buy_orders) != 0:
+                                    best_bid, best_bid_amount = list(order_depth.buy_orders.items())[0]
+                                    if int(best_bid) > acceptable_price:
+                                          print("SELL", str(best_bid_amount) + "x", best_bid)
+                                          orders.append(Order(product, best_bid, -best_bid_amount))
+                              
+                              result[product] = orders
                         
                         elif product == 'AMETHYSTS':
                               Prices, new_Prices, inventory = get_traderData(state, product)
