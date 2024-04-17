@@ -13,7 +13,7 @@ class Trader:
         print("traderData: " + state.traderData)
         print("Observations: " + str(state.observations))
 
-				# Orders to be placed on exchange matching engine
+		# Orders to be placed on exchange matching engine
         result = {}
         order_depth_GB: OrderDepth = state.order_depths['GIFT_BASKET']
         order_depth_C: OrderDepth = state.order_depths['CHOCOLATE']
