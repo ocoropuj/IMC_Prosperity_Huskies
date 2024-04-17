@@ -42,26 +42,41 @@ class Trader:
 
         acceptable_price_short_GB = 4 * best_ask_C + 6 * best_ask_S + best_ask_R
         acceptable_price_long_GB = 4 * best_bid_C + 6 * best_bid_S + best_bid_R
-        
-        acceptable_price_short_C = 0.25 * (best_ask_GB - 6 * best_ask_S - best_ask_R)
-        acceptable_price_long_C = 0.25 * (best_bid_GB - 6 * best_bid_S - best_bid_R)
-
-        acceptable_price_short_S = (best_ask_GB - 4 * best_ask_C - best_ask_R) / 6
-        acceptable_price_long_S = (best_bid_GB - 4 * best_bid_C - best_bid_R) / 6
-
-        acceptable_price_short_R = (best_ask_GB - 4 * best_ask_C - 6 * best_ask_S)
-        acceptable_price_long_R = (best_bid_GB - 4 * best_bid_C - 6 * best_bid_S)
 
         if best_ask_GB < acceptable_price_short_GB:
             orders_GB.append(Order('GIFT_BASKET', best_ask_GB, -best_ask_amount_GB))
         if best_bid_GB > acceptable_price_long_GB:
             orders_GB.append(Order('GIFT_BASKET', best_bid_GB, -best_bid_amount_GB))
+        result['GIFT_BASKET'] = orders_GB
         
+
+        abcde = """
+        acceptable_price_short_C = 0.25 * (best_ask_GB - 6 * best_ask_S - best_ask_R)
+        acceptable_price_long_C = 0.25 * (best_bid_GB - 6 * best_bid_S - best_bid_R)
+
+        if best_ask_GB < acceptable_price_short_GB:
+            orders_GB.append(Order('GIFT_BASKET', best_ask_GB, -best_ask_amount_GB))
+        if best_bid_GB > acceptable_price_long_GB:
+            orders_GB.append(Order('GIFT_BASKET', best_bid_GB, -best_bid_amount_GB))
+        result['GIFT_BASKET'] = orders_GB
+    
+        result['CHOCOLATE'] = orders_C
+
+        
+        acceptable_price_short_S = (best_ask_GB - 4 * best_ask_C - best_ask_R) / 6
+        acceptable_price_long_S = (best_bid_GB - 4 * best_bid_C - best_bid_R) / 6
+
         if best_ask_C < acceptable_price_short_C:
             orders_C.append(Order('CHOCOLATE', best_ask_C, -best_ask_amount_C))
         if best_bid_C > acceptable_price_long_C:
             orders_C.append(Order('CHOCOLATE', best_bid_C, -best_bid_amount_C))
-        
+
+        result['STRAWBERRIES'] = orders_S
+
+
+        acceptable_price_short_R = (best_ask_GB - 4 * best_ask_C - 6 * best_ask_S)
+        acceptable_price_long_R = (best_bid_GB - 4 * best_bid_C - 6 * best_bid_S)
+
         if best_ask_S < acceptable_price_short_S:
             orders_S.append(Order('STRAWBERRIES', best_ask_S, -best_ask_amount_S))
         if best_bid_S > acceptable_price_long_S:
@@ -72,11 +87,9 @@ class Trader:
         if best_bid_R > acceptable_price_long_R:
             orders_R.append(Order('ROSES', best_bid_R, -best_bid_amount_R))
         
-        result['GIFT_BASKET'] = orders_GB
-        result['CHOCOLATE'] = orders_C
-        result['STRAWBERRIES'] = orders_S
-        result['ROSES'] = orders_R
 
+        result['ROSES'] = orders_R
+        """
         traderData = 'sample'
 
 
