@@ -1,8 +1,6 @@
 from datamodel import OrderDepth, UserId, TradingState, Order
 from typing import List
 import string
-import numpy as np
-import pandas as pd
 
 
 class Trader:
@@ -48,7 +46,7 @@ class Trader:
         acceptable_price_short_C = 0.25 * (best_ask_GB - 6 * best_ask_S - best_ask_R)
         acceptable_price_long_C = 0.25 * (best_bid_GB - 6 * best_bid_S - best_bid_R)
 
-        acceptable_price_short_S = = (best_ask_GB - 4 * best_ask_C - best_ask_R) / 6
+        acceptable_price_short_S = (best_ask_GB - 4 * best_ask_C - best_ask_R) / 6
         acceptable_price_long_S = (best_bid_GB - 4 * best_bid_C - best_bid_R) / 6
 
         acceptable_price_short_R = (best_ask_GB - 4 * best_ask_C - 6 * best_ask_S)
