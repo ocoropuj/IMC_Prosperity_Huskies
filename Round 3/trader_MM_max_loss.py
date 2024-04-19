@@ -4,9 +4,7 @@ import string
 
 
 class Trader:
-    def __innit__(self):
-          self.prices_starfruit = []
-    
+
     def run(self, state: TradingState):
         print("traderData: " + state.traderData)
         print("Observations: " + str(state.observations))
@@ -78,4 +76,3 @@ class Trader:
 
 
         return result, 1, traderData
-    
