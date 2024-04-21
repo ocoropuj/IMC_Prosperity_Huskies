@@ -51,7 +51,10 @@ sigma_coco = 0.010325871983015607
 T = 250
 r = 0
 K = 10000
-        
+
+delta_S_price_std = 0.002561
+delta_C_price_std = 0.021375
+
 
 class Trader:
     def run(self, state: TradingState):
