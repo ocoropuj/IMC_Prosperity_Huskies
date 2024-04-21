@@ -14,6 +14,9 @@ K = 10000
 delta_COCO_price_std = 0.002561
 delta_CC_price_std = 0.021375
 
+spread_COCO = 31.60165031167901
+spread_CC = -16.69564254176269
+
 def norm_pdf(x):
   if isinstance(x, pd.Series):
         return x.apply(lambda y: np.exp(-0.5 * y**2) / np.sqrt(2 * np.pi))
@@ -56,8 +59,6 @@ def inverse_black_scholes(C_target, sigma=sigma_coco, K=K, T=T, r=r):
     return S  # Return the last computed value if not converged
 
 
-
-
 class Trader:
     def run(self, state: TradingState):
         print("traderData: " + state.traderData)
@@ -81,7 +82,7 @@ class Trader:
             best_bid_CC, best_bid_amount_CC = list(order_depth_CC.buy_orders.items())[0]
             best_ask_CC, best_ask_amount_CC = list(order_depth_CC.sell_orders.items())[0]
 
-            BL_price
+            BL_price = 
 
 
         
