@@ -14,8 +14,8 @@ K = 10000
 delta_COCO_price_std = 0.002561
 delta_CC_price_std = 0.021375
 
-spread_COCO = 31.60165031167901
-spread_CC = -16.69564254176269
+spread_COCO = 30
+spread_CC = - 15
 
 def norm_pdf(x):
   if isinstance(x, pd.Series):
