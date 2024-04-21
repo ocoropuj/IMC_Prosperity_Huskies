@@ -74,15 +74,20 @@ class Trader:
         len_CC_B, len_CC_S = len(order_depth_CC.buy_orders), len(order_depth_CC.sell_orders)
 
         orders_COCO: List[Order] = []
-        orders_C: List[Order] = []
+        orders_CC: List[Order] = []
 
         if len_CC_B != 0 and len_CC_S != 0 and len_COCO_B != 0 and len_COCO_S != 0:
             best_ask_CC, best_ask_amount_CC = list(order_depth_CC.sell_orders.items())[0]
             best_ask_COCO, best_ask_amount_COCO = list(order_depth_COCO.sell_orders.items())[0]
             best_bid_CC, best_bid_amount_CC = list(order_depth_CC.buy_orders.items())[0]
-            best_ask_CC, best_ask_amount_CC = list(order_depth_CC.sell_orders.items())[0]
+            best_bid_COCO, best_bid_amount_COCO = list(order_depth_COCO.buy_orders.items())[0]
 
-            BL_price = 
+            BS_price_ask = black_scholes(S=best_ask_COCO) + spread_CC
+            BS_price_bid = black_scholes(S=best_bid_COCO) + spread_CC
+            inv_BS_price_ask = inverse_black_scholes(S=best_ask_CC) + spread_COCO
+            inv_BS_price_bid = inverse_black_scholes(S=best_bid_CC) + spread_COCO
+
+
 
 
         
