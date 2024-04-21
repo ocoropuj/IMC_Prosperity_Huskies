@@ -1,6 +1,10 @@
 from datamodel import OrderDepth, UserId, TradingState, Order
 from typing import List
 import string
+import numpy as np
+import pandas as pd
+import math
+import statistics
 
 def norm_pdf(x):
   if isinstance(x, pd.Series):
@@ -43,6 +47,11 @@ def inverse_black_scholes(C_target, sigma, K=K, T=T, r=r):
     
     return S  # Return the last computed value if not converged
 
+sigma_coco = 0.010325871983015607
+T = 250
+r = 0
+K = 10000
+        
 
 class Trader:
     def run(self, state: TradingState):
@@ -61,10 +70,7 @@ class Trader:
         orders_COCO: List[Order] = []
         orders_C: List[Order] = []
 
-        sigma_coco = 0.010325871983015607
-        T = 250
-        r = 0
-        K = 10000
+
 
 
 
