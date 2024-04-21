@@ -73,8 +73,15 @@ class Trader:
         orders_COCO: List[Order] = []
         orders_C: List[Order] = []
 
+        if len_CC_B != 0 and len_CC_S != 0 and len_COCO_B != 0 and len_COCO_S != 0:
+                best_ask_CC, best_ask_amount_CC = list(order_depth_CC.sell_orders.items())[0]
+                best_ask_COCO, best_ask_amount_COCO = list(order_depth_COCO.sell_orders.items())[0]
+                best_bid_CC, best_bid_amount_CC = list(order_depth_CC.buy_orders.items())[0]
+                
 
 
+        
+            
 
 
 
