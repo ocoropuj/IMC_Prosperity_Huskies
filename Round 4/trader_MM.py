@@ -52,8 +52,8 @@ T = 250
 r = 0
 K = 10000
 
-delta_S_price_std = 0.002561
-delta_C_price_std = 0.021375
+delta_COCO_price_std = 0.002561
+delta_CC_price_std = 0.021375
 
 
 class Trader:
