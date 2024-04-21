@@ -84,14 +84,14 @@ class Trader:
 
             BS_price_ask = black_scholes(S=best_ask_COCO) + spread_CC
             BS_price_bid = black_scholes(S=best_bid_COCO) + spread_CC
-            inv_BS_price_ask = inverse_black_scholes(S=best_ask_CC) + spread_COCO
-            inv_BS_price_bid = inverse_black_scholes(S=best_bid_CC) + spread_COCO
+            #inv_BS_price_ask = inverse_black_scholes(S=best_ask_CC) + spread_COCO
+            #inv_BS_price_bid = inverse_black_scholes(S=best_bid_CC) + spread_COCO
 
             ratio_long_coco = 1 - delta_COCO_price_std
             ratio_short_coco = 1 + delta_COCO_price_std
 
-            ratio_long_CC = 1 + delta_CC_price_std
-            ratio_short_CC = 1 - delta_CC_price_std
+            ratio_long_CC = 1 - 2 * delta_CC_price_std
+            ratio_short_CC = 1 + 2 * delta_CC_price_std
 
 
             if BS_price_ask * ratio_long_CC > best_ask_CC:
@@ -102,13 +102,13 @@ class Trader:
                 orders_CC.append(Order('COCONUT_COUPON', best_bid_CC, -best_bid_amount_CC)) # I Buy Coconut Cupon
                 orders_COCO.append(Order('COCONUT', best_ask_COCO, -best_ask_amount_COCO)) # I Sell Coconut
             
-            if inv_BS_price_ask * ratio_long_coco > best_ask_COCO:
-                orders_COCO.append(Order('COCONUT', best_ask_COCO, -best_ask_amount_COCO)) # I Sell Coconut
-                orders_CC.append(Order('COCONUT_COUPON', best_bid_CC, -best_bid_amount_CC)) # I Buy Coconut Cupon
+            #if inv_BS_price_ask * ratio_long_coco > best_ask_COCO:
+            #    orders_COCO.append(Order('COCONUT', best_ask_COCO, -best_ask_amount_COCO)) # I Sell Coconut
+            #    orders_CC.append(Order('COCONUT_COUPON', best_bid_CC, -best_bid_amount_CC)) # I Buy Coconut Cupon
             
-            if inv_BS_price_bid * ratio_short_coco < best_bid_COCO:
-                orders_COCO.append(Order('COCONUT', best_bid_COCO, -best_bid_amount_COCO)) # I Buy Coconut
-                orders_CC.append(Order('COCONUT_COUPON', best_ask_CC, -best_ask_amount_CC)) # I Sell Coconut Cupon
+            #if inv_BS_price_bid * ratio_short_coco < best_bid_COCO:
+            #    orders_COCO.append(Order('COCONUT', best_bid_COCO, -best_bid_amount_COCO)) # I Buy Coconut
+            #    orders_CC.append(Order('COCONUT_COUPON', best_ask_CC, -best_ask_amount_CC)) # I Sell Coconut Cupon
         
             result['COCONUT'] = orders_COCO
             result['COCONUT_COUPON'] = orders_CC
