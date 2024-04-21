@@ -87,9 +87,27 @@ class Trader:
             inv_BS_price_ask = inverse_black_scholes(S=best_ask_CC) + spread_COCO
             inv_BS_price_bid = inverse_black_scholes(S=best_bid_CC) + spread_COCO
 
+            ratio_long_coco = 1 - delta_COCO_price_std
+            ratio_short_coco = 1 + delta_COCO_price_std
+
+            ratio_long_CC = 1 + delta_CC_price_std
 
 
-
+            if BS_price_ask * ratio_long_CC > best_ask_CC:
+                orders_CC.append(Order('COCONUT_COUPON', best_ask_CC, -best_ask_amount_CC))
+                orders_COCO.append(Order('COCONUT', best_bid_COCO, -best_bid_amount_COCO))
+            
+            if BS_price_bid * ratio_short_CC < best_bid_CC:
+                orders_CC.append(Order('COCONUT_COUPON', best_bid_CC, -best_bid_amount_CC))
+                orders_COCO.append(Order('COCONUT', best_ask_COCO, -best_ask_amount_COCO))
+            
+            if inv_BS_price_ask * ratio_long_coco > best_ask_COCO:
+                orders_COCO.append(Order('COCONUT', best_ask_COCO, -best_ask_amount_COCO))
+                orders_CC.append(Order('COCONUT_COUPON', best_bid_CC, -best_bid_amount_CC))
+            
+            if inv_BS_price_bid * ratio_short_coco < best_bid_COCO:
+                orders_COCO.append(Order('COCONUT', best_bid_COCO, -best_bid_amount_COCO)) 
+                orders_CC.append(Order('COCONUT_COUPON', best_ask_CC, -best_ask_amount_CC))
         
             
 
