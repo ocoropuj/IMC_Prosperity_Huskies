@@ -6,6 +6,14 @@ import pandas as pd
 import math
 import statistics
 
+sigma_coco = 0.010325871983015607
+T = 250
+r = 0
+K = 10000
+
+delta_COCO_price_std = 0.002561
+delta_CC_price_std = 0.021375
+
 def norm_pdf(x):
   if isinstance(x, pd.Series):
         return x.apply(lambda y: np.exp(-0.5 * y**2) / np.sqrt(2 * np.pi))
@@ -18,14 +26,14 @@ def norm_cdf(x):
     else:
         return 0.5 * (1 + math.erf(x / math.sqrt(2)))
 
-def black_scholes(S, sigma, K=K, T=T, r=r):
+def black_scholes(S, sigma=sigma_coco, K=K, T=T, r=r):
     d1 = (np.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
     d2 = d1 - sigma * np.sqrt(T)
 
     C = S * norm_cdf(d1) - K * np.exp(-r * T) * norm_cdf(d2)
     return C
 
-def inverse_black_scholes(C_target, sigma, K=K, T=T, r=r):
+def inverse_black_scholes(C_target, sigma=sigma_coco, K=K, T=T, r=r):
     # Initial guess for S
     S = C_target  # Starting guess as the option price is often close to the stock price
     tolerance = 1e-5  # Tolerance for convergence
@@ -47,13 +55,7 @@ def inverse_black_scholes(C_target, sigma, K=K, T=T, r=r):
     
     return S  # Return the last computed value if not converged
 
-sigma_coco = 0.010325871983015607
-T = 250
-r = 0
-K = 10000
 
-delta_COCO_price_std = 0.002561
-delta_CC_price_std = 0.021375
 
 
 class Trader:
@@ -74,10 +76,12 @@ class Trader:
         orders_C: List[Order] = []
 
         if len_CC_B != 0 and len_CC_S != 0 and len_COCO_B != 0 and len_COCO_S != 0:
-                best_ask_CC, best_ask_amount_CC = list(order_depth_CC.sell_orders.items())[0]
-                best_ask_COCO, best_ask_amount_COCO = list(order_depth_COCO.sell_orders.items())[0]
-                best_bid_CC, best_bid_amount_CC = list(order_depth_CC.buy_orders.items())[0]
-                
+            best_ask_CC, best_ask_amount_CC = list(order_depth_CC.sell_orders.items())[0]
+            best_ask_COCO, best_ask_amount_COCO = list(order_depth_COCO.sell_orders.items())[0]
+            best_bid_CC, best_bid_amount_CC = list(order_depth_CC.buy_orders.items())[0]
+            best_ask_CC, best_ask_amount_CC = list(order_depth_CC.sell_orders.items())[0]
+
+            BL_price
 
 
         
