@@ -2,6 +2,47 @@ from datamodel import OrderDepth, UserId, TradingState, Order
 from typing import List
 import string
 
+def norm_pdf(x):
+  if isinstance(x, pd.Series):
+        return x.apply(lambda y: np.exp(-0.5 * y**2) / np.sqrt(2 * np.pi))
+  else:
+      return np.exp(-0.5 * x**2) / np.sqrt(2 * np.pi)
+
+def norm_cdf(x):
+    if isinstance(x, pd.Series):
+        return x.apply(lambda y: 0.5 * (1 + math.erf(y / math.sqrt(2))))
+    else:
+        return 0.5 * (1 + math.erf(x / math.sqrt(2)))
+
+def black_scholes(S, sigma, K=K, T=T, r=r):
+    d1 = (np.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
+    d2 = d1 - sigma * np.sqrt(T)
+
+    C = S * norm_cdf(d1) - K * np.exp(-r * T) * norm_cdf(d2)
+    return C
+
+def inverse_black_scholes(C_target, sigma, K=K, T=T, r=r):
+    # Initial guess for S
+    S = C_target  # Starting guess as the option price is often close to the stock price
+    tolerance = 1e-5  # Tolerance for convergence
+    max_iterations = 100  # Max iterations to prevent infinite loops
+    
+    for i in range(max_iterations):
+        C = black_scholes(S, sigma, K, T, r)
+        # Calculate Black-Scholes derivative w.r.t. S (Vega)
+        d1 = (np.log(S / K) + (r + 0.5 * sigma ** 2) * T) / (sigma * np.sqrt(T))
+        vega = S * norm_cdf(d1) * np.sqrt(T)  # approximation
+        
+        # Newton-Raphson iteration
+        S_next = S - (C - C_target) / max(vega.any(), 1e-3)
+        
+        # Check if the change is within the tolerance
+        if (abs(S_next - S) < tolerance).all():
+            return S_next
+        S = S_next
+    
+    return S  # Return the last computed value if not converged
+
 
 class Trader:
     def run(self, state: TradingState):
@@ -10,6 +51,36 @@ class Trader:
 
 		# Orders to be placed on exchange matching engine
         result = {}
+
+        order_depth_COCO: OrderDepth = state.order_depths['COCONUT']
+        order_depth_CC: OrderDepth = state.order_depths['COCONUT_COUPON']
+
+        len_COCO_B, len_COCO_S = len(order_depth_COCO.buy_orders), len(order_depth_COCO.sell_orders)
+        len_CC_B, len_CC_S = len(order_depth_CC.buy_orders), len(order_depth_CC.sell_orders)
+
+        orders_COCO: List[Order] = []
+        orders_C: List[Order] = []
+
+        sigma_coco = 0.010325871983015607
+        T = 250
+        r = 0
+        K = 10000
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         order_depth_GB: OrderDepth = state.order_depths['GIFT_BASKET']
         order_depth_C: OrderDepth = state.order_depths['CHOCOLATE']
         order_depth_S: OrderDepth = state.order_depths['STRAWBERRIES']
