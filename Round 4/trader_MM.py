@@ -91,6 +91,7 @@ class Trader:
             ratio_short_coco = 1 + delta_COCO_price_std
 
             ratio_long_CC = 1 + delta_CC_price_std
+            ratio_short_CC = 1 - delta_CC_price_std
 
 
             if BS_price_ask * ratio_long_CC > best_ask_CC:
@@ -109,20 +110,8 @@ class Trader:
                 orders_COCO.append(Order('COCONUT', best_bid_COCO, -best_bid_amount_COCO)) 
                 orders_CC.append(Order('COCONUT_COUPON', best_ask_CC, -best_ask_amount_CC))
         
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
+            result['COCONUT'] = orders_COCO
+            result['COCONUT_COUPON'] = orders_CC
 
 
         order_depth_GB: OrderDepth = state.order_depths['GIFT_BASKET']
