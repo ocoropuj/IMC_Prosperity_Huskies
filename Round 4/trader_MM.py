@@ -95,20 +95,20 @@ class Trader:
 
 
             if BS_price_ask * ratio_long_CC > best_ask_CC:
-                orders_CC.append(Order('COCONUT_COUPON', best_ask_CC, -best_ask_amount_CC))
-                orders_COCO.append(Order('COCONUT', best_bid_COCO, -best_bid_amount_COCO))
+                orders_CC.append(Order('COCONUT_COUPON', best_ask_CC, -best_ask_amount_CC)) # I Sell Coconut Cupon
+                orders_COCO.append(Order('COCONUT', best_bid_COCO, -best_bid_amount_COCO)) # I Buy Coconut
             
             if BS_price_bid * ratio_short_CC < best_bid_CC:
-                orders_CC.append(Order('COCONUT_COUPON', best_bid_CC, -best_bid_amount_CC))
-                orders_COCO.append(Order('COCONUT', best_ask_COCO, -best_ask_amount_COCO))
+                orders_CC.append(Order('COCONUT_COUPON', best_bid_CC, -best_bid_amount_CC)) # I Buy Coconut Cupon
+                orders_COCO.append(Order('COCONUT', best_ask_COCO, -best_ask_amount_COCO)) # I Sell Coconut
             
             if inv_BS_price_ask * ratio_long_coco > best_ask_COCO:
-                orders_COCO.append(Order('COCONUT', best_ask_COCO, -best_ask_amount_COCO))
-                orders_CC.append(Order('COCONUT_COUPON', best_bid_CC, -best_bid_amount_CC))
+                orders_COCO.append(Order('COCONUT', best_ask_COCO, -best_ask_amount_COCO)) # I Sell Coconut
+                orders_CC.append(Order('COCONUT_COUPON', best_bid_CC, -best_bid_amount_CC)) # I Buy Coconut Cupon
             
             if inv_BS_price_bid * ratio_short_coco < best_bid_COCO:
-                orders_COCO.append(Order('COCONUT', best_bid_COCO, -best_bid_amount_COCO)) 
-                orders_CC.append(Order('COCONUT_COUPON', best_ask_CC, -best_ask_amount_CC))
+                orders_COCO.append(Order('COCONUT', best_bid_COCO, -best_bid_amount_COCO)) # I Buy Coconut
+                orders_CC.append(Order('COCONUT_COUPON', best_ask_CC, -best_ask_amount_CC)) # I Sell Coconut Cupon
         
             result['COCONUT'] = orders_COCO
             result['COCONUT_COUPON'] = orders_CC
