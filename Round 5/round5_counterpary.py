@@ -24,12 +24,7 @@ data = {
 
 # Create the DataFrame
 people_data = pd.DataFrame(data, index=assets)
-class OwnTrade:
-    def __init__(self, symbol: Symbol, price: int, quantity: int, counter_party: UserId = None) -> None:
-        self.symbol = symbol
-        self.price: int = price
-        self.quantity: int = quantity
-        self.counter_party = counter_party
+
 
 class Trader:
       def __innit__(self):
@@ -40,7 +35,11 @@ class Trader:
             print("Observations: " + str(state.observations))
 
             result = {}
+            print(state.own_trades)
+
+            abc = """
             for trader in state.own_trades:
+
                   orders: List[Order] = []
                   own_trade = state.own_trades[trader]
                   try:
@@ -61,7 +60,7 @@ class Trader:
                   
                   except:
                         print(f'No trades from {trader}')
-                  
+            """
             traderData = "SAMPLE" 
             
                               # Sample conversion request. Check more details below. 
