@@ -11,15 +11,15 @@ assets = ['AMETHYSTS', 'STARFRUIT', 'GIFT_BASKET', 'CHOCOLATE', 'STRAWBERRIES', 
 
 # Define the data
 data = {
-    'Adam': [0, 0, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan],
-    'Amelia': [1, None, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan],
-    'Raj': [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, None, np.nan],
-    'Remy': [-1, -2, None, None, None, None, np.nan, np.nan],
-    'Rihana': [0, None, None, 0, np.nan, np.nan, -1, -2],
-    'Ruby': [-2, 0, None, np.nan, np.nan, np.nan, np.nan, None],
-    'Valentina': [0, None, np.nan, np.nan, np.nan, np.nan, np.nan, 3],
-    'Vinnie': [1, -2, 1.5, 2, 2.5, 2, -3, -3],
-    'Vladimir': [1, -1, 2, -3, -3, -2, np.nan, 2]
+      'Vinnie': [1, -2, 1.5, 2, 2.5, 2, -3, -3],
+      'Vladimir': [1, -1, 2, -3, -3, -2, np.nan, 2],
+      'Valentina': [0, None, np.nan, np.nan, np.nan, np.nan, np.nan, 3],
+      'Adam': [0, 0, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan],
+      'Amelia': [1, None, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan],
+      'Raj': [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, None, np.nan],
+      'Remy': [-1, -2, None, None, None, None, np.nan, np.nan],
+      'Rihana': [0, None, None, 0, np.nan, np.nan, -1, -2],
+      'Ruby': [-2, 0, None, np.nan, np.nan, np.nan, np.nan, None]
 }
 
 # Create the DataFrame
@@ -36,38 +36,27 @@ class Trader:
 
             result = {}
             for trader in state.own_trades:
+                  orders: List[Order] = []
                   own_trade: OwnTrade = state.own_trades[trader]
                   try:
                         symbol = own_trade.symbol
+                        score = people_data[trader].loc[symbol]
+                        price = own_trade.price
+                        quantity = own_trade.quantity
+                        if quantity > 0 and score > 0:
+                              price_delta = 1.01
+                        elif quantity < 0 and score > 0:
+                              price_delta = 0.99
+                        else:
+                              price_delta = 1
+
+
+                        orders.append(Order(symbol, price_delta*price, int(score*quantity)))
+                        result[symbol] = orders 
                   
-
-                  people_data[trader].loc[symbol]
-
-            for product in state.order_depths:
-                  order_depth: OrderDepth = state.order_depths[product]
+                  except:
+                        print(f'No trades from {trader}')
                   
-                  orders: List[Order] = []
-                  acceptable_price = 10000  # Participant should calculate this value
-                  print("Acceptable price : " + str(acceptable_price))
-                  print("Buy Order depth : " + str(len(order_depth.buy_orders)) + ", Sell order depth : " + str(len(order_depth.sell_orders)))
-            
-                  if len(order_depth.sell_orders) != 0:
-                        best_ask, best_ask_amount = list(order_depth.sell_orders.items())[0]
-                        print(f'Best Ask: {best_ask_amount}')
-                        if int(best_ask) < acceptable_price:
-                              print("BUY", str(-best_ask_amount) + "x", best_ask)
-                              orders.append(Order(product, best_ask, -best_ask_amount))
-            
-                  if len(order_depth.buy_orders) != 0:
-                        best_bid, best_bid_amount = list(order_depth.buy_orders.items())[0]
-                        print(f'Best bid: {best_bid_amount}')
-                        if int(best_bid) > acceptable_price:
-                              print("SELL", str(best_bid_amount) + "x", best_bid)
-                              orders.append(Order(product, best_bid, -best_bid_amount))
-
-                  result[product] = orders 
-                  # String value holding Trader state data required. 
-  
             traderData = "SAMPLE" 
             
                               # Sample conversion request. Check more details below. 
