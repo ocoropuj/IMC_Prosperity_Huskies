@@ -1,4 +1,4 @@
-from datamodel import OrderDepth, UserId, TradingState, Order, OwnTrade
+from datamodel import OrderDepth, UserId, TradingState, Order
 from typing import List
 import string
 import numpy as np
@@ -24,7 +24,12 @@ data = {
 
 # Create the DataFrame
 people_data = pd.DataFrame(data, index=assets)
-
+class OwnTrade:
+    def __init__(self, symbol: Symbol, price: int, quantity: int, counter_party: UserId = None) -> None:
+        self.symbol = symbol
+        self.price: int = price
+        self.quantity: int = quantity
+        self.counter_party = counter_party
 
 class Trader:
       def __innit__(self):
@@ -37,7 +42,7 @@ class Trader:
             result = {}
             for trader in state.own_trades:
                   orders: List[Order] = []
-                  own_trade: OwnTrade = state.own_trades[trader]
+                  own_trade = state.own_trades[trader]
                   try:
                         symbol = own_trade.symbol
                         score = people_data[trader].loc[symbol]
