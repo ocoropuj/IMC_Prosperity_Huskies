@@ -2,6 +2,7 @@ from datamodel import OrderDepth, UserId, TradingState, Order, OwnTrade
 from typing import List
 import string
 import numpy as np
+import pandas as pd
 
 
 # Define traders and assets in the specified order
@@ -22,7 +23,7 @@ data = {
 }
 
 # Create the DataFrame
-df = pd.DataFrame(data, index=assets)
+people_data = pd.DataFrame(data, index=assets)
 
 
 class Trader:
@@ -34,11 +35,17 @@ class Trader:
             print("Observations: " + str(state.observations))
 
             result = {}
+            for trader in state.own_trades:
+                  own_trade: OwnTrade = state.own_trades[trader]
+                  try:
+                        symbol = own_trade.symbol
+                  
 
+                  people_data[trader].loc[symbol]
 
             for product in state.order_depths:
                   order_depth: OrderDepth = state.order_depths[product]
-                  own_trades: OwnTrade = state.own_trades[product]
+                  
                   orders: List[Order] = []
                   acceptable_price = 10000  # Participant should calculate this value
                   print("Acceptable price : " + str(acceptable_price))
