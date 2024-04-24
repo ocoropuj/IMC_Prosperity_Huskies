@@ -26,41 +26,43 @@ df = pd.DataFrame(data, index=assets)
 
 
 class Trader:
-    def __innit__(self):
+      def __innit__(self):
           self.prices_starfruit = []
     
-    def run(self, state: TradingState):
-        print("traderData: " + state.traderData)
-        print("Observations: " + str(state.observations))
+      def run(self, state: TradingState):
+            print("traderData: " + state.traderData)
+            print("Observations: " + str(state.observations))
 
-        result = {}
-        for product in state.order_depths:
-            order_depth: OrderDepth = state.order_depths[product]
-            own_trades: OwnTrade = state.own_trades[product]
-            orders: List[Order] = []
-            acceptable_price = 10000  # Participant should calculate this value
-            print("Acceptable price : " + str(acceptable_price))
-            print("Buy Order depth : " + str(len(order_depth.buy_orders)) + ", Sell order depth : " + str(len(order_depth.sell_orders)))
-      
-            if len(order_depth.sell_orders) != 0:
-                  best_ask, best_ask_amount = list(order_depth.sell_orders.items())[0]
-                  print(f'Best Ask: {best_ask_amount}')
-                  if int(best_ask) < acceptable_price:
-                        print("BUY", str(-best_ask_amount) + "x", best_ask)
-                        orders.append(Order(product, best_ask, -best_ask_amount))
-      
-            if len(order_depth.buy_orders) != 0:
-                  best_bid, best_bid_amount = list(order_depth.buy_orders.items())[0]
-                  print(f'Best bid: {best_bid_amount}')
-                  if int(best_bid) > acceptable_price:
-                        print("SELL", str(best_bid_amount) + "x", best_bid)
-                        orders.append(Order(product, best_bid, -best_bid_amount))
+            result = {}
 
-            result[product] = orders 
-		# String value holding Trader state data required. 
+
+            for product in state.order_depths:
+                  order_depth: OrderDepth = state.order_depths[product]
+                  own_trades: OwnTrade = state.own_trades[product]
+                  orders: List[Order] = []
+                  acceptable_price = 10000  # Participant should calculate this value
+                  print("Acceptable price : " + str(acceptable_price))
+                  print("Buy Order depth : " + str(len(order_depth.buy_orders)) + ", Sell order depth : " + str(len(order_depth.sell_orders)))
+            
+                  if len(order_depth.sell_orders) != 0:
+                        best_ask, best_ask_amount = list(order_depth.sell_orders.items())[0]
+                        print(f'Best Ask: {best_ask_amount}')
+                        if int(best_ask) < acceptable_price:
+                              print("BUY", str(-best_ask_amount) + "x", best_ask)
+                              orders.append(Order(product, best_ask, -best_ask_amount))
+            
+                  if len(order_depth.buy_orders) != 0:
+                        best_bid, best_bid_amount = list(order_depth.buy_orders.items())[0]
+                        print(f'Best bid: {best_bid_amount}')
+                        if int(best_bid) > acceptable_price:
+                              print("SELL", str(best_bid_amount) + "x", best_bid)
+                              orders.append(Order(product, best_bid, -best_bid_amount))
+
+                  result[product] = orders 
+                  # String value holding Trader state data required. 
   
-        traderData = "SAMPLE" 
-        
-				# Sample conversion request. Check more details below. 
-        conversions = 1
-        return result, conversions, traderData
+            traderData = "SAMPLE" 
+            
+                              # Sample conversion request. Check more details below. 
+            conversions = 1
+            return result, conversions, traderData
